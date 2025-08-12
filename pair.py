@@ -1,19 +1,24 @@
+# https://ranaroussi.github.io/yfinance
 import yfinance as yf
 
-SPY = yf.Ticker("SPY")
-QQQ = yf.Ticker("QQQ")
+spy = yf.Ticker("SPY").history('25y', interval='1wk')
+qqq = yf.Ticker("QQQ").history('25y', interval='1wk')
 
-spy = SPY.history(period='1y')
-qqq = QQQ.history(period='1y')
+spread = spy['Close'] - qqq['Close']
 
-dif = spy['Close'] - qqq['Close']
+# https://pandas.pydata.org/docs/reference/api/pandas.Series.rolling.html
+mean = spread.rolling(60, min_periods=1).mean()
+std = spread.rolling(60, min_periods=1).std()
 
-mean = dif.tail(60).mean()
-std = dif.tail(60).std()
+score = (spread-mean)/std
 
-score = (dif-mean)/std
-score.plot()
+# https://pandas.pydata.org/docs/reference/api/pandas.Series.plot.html
+axes = score.plot(figsize=(14,4))
+# https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.axhline.html
+axes.axhline(y=1, ls="-.")
+axes.axhline(y=-1, ls="-.")
 
 import matplotlib.pyplot as plt
-
+plt.grid()
+plt.ylim(-6, 6)
 plt.show()
