@@ -21,4 +21,6 @@ axes.axhline(y=-1, ls="-.")
 import matplotlib.pyplot as plt
 plt.grid()
 plt.ylim(-6, 6)
+plt.ylabel("[(SPY-QQQ) - mean(60d)] / std(60d)")
+plt.tight_layout() # https://stackoverflow.com/a/15712584
 plt.show()
